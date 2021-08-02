@@ -44,10 +44,9 @@ trait ResponseTrait
         if ($transformerName instanceof Transformer) {
             // check, if we have provided a respective TRANSFORMER class
             $transformer = $transformerName;
-        }
-        else {
+        } else {
             // of if we just passed the classname
-            $transformer = new $transformerName;
+            $transformer = new $transformerName();
         }
 
         // now, finally check, if the class is really a TRANSFORMER
@@ -221,9 +220,8 @@ trait ResponseTrait
     /**
      * @return array
      */
-    protected function parseRequestedIncludes() : array
+    protected function parseRequestedIncludes(): array
     {
         return explode(',', Request::get('include'));
     }
-
 }

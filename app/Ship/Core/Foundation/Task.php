@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Ship\Core\Foundation;
-
 
 use App;
 use App\Ship\Core\Exceptions\ClassDoesNotExistException;
@@ -25,7 +23,6 @@ class Task
     {
         // in case passing apiato style names such as containerName@classType
         if ($this->needsParsing($class)) {
-
             [$containerName, $className] = $this->parseClassName($class);
 
             \Task::verifyContainerExist($containerName);
@@ -76,5 +73,4 @@ class Task
             throw new ClassDoesNotExistException("Class ($className) is not installed.");
         }
     }
-
 }

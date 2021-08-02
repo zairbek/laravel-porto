@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Ship\Core\Exceptions\Handlers;
-
 
 use Illuminate\Foundation\Exceptions\Handler as LaravelHandler;
 use Throwable;

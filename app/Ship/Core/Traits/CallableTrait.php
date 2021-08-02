@@ -131,5 +131,4 @@ trait CallableTrait
 
         return $runMethodArguments;
     }
-
 }

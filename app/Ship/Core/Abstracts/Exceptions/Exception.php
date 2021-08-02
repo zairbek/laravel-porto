@@ -24,7 +24,7 @@ abstract class Exception extends SymfonyHttpException
      *
      * @var int
      */
-    CONST DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
+    const DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
 
     /**
      * @var string
@@ -46,8 +46,8 @@ abstract class Exception extends SymfonyHttpException
         $statusCode = null,
         $code = 0,
         BaseException $previous = null,
-        $headers = [])
-    {
+        $headers = []
+    ) {
         // detect and set the running environment
         $this->environment = Config::get('app.env');
 
@@ -126,8 +126,7 @@ abstract class Exception extends SymfonyHttpException
                 'Status Code: ' . $statusCode . ' | ' .
                 'Message: ' . $message . ' | ' .
                 'Errors: ' . $this->errors . ' | ' .
-                'Code: ' . $code
-            );
+                'Code: ' . $code);
         }
     }
 
@@ -184,5 +183,4 @@ abstract class Exception extends SymfonyHttpException
     {
         return !$this->errors->isEmpty();
     }
-
 }

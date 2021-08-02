@@ -129,28 +129,25 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
 
         $obj = $this->model->newQuery();
 
-        if(!empty($filter)){
+        if (!empty($filter)) {
             //dd($filter);
-            foreach ($filter as $key=>$value){
-                if(is_array($value)){
-
-                    $obj->where(function($query) use ($value,$key) {
-                        foreach ($value as $v){
-                            $query->where($key,'=',$v,"or");
+            foreach ($filter as $key => $value) {
+                if (is_array($value)) {
+                    $obj->where(function ($query) use ($value, $key) {
+                        foreach ($value as $v) {
+                            $query->where($key, '=', $v, "or");
                         }
                     });
-
-                }else{
+                } else {
                     //dd($key,$value);
-                    $obj->where($key,'=',$value);
+                    $obj->where($key, '=', $value);
                 }
-
             }
             //dd($obj);
         }
 
         $data = $obj
-            ->where('name','!=','')
+            ->where('name', '!=', '')
             ->get($columns);
 
         return $data;

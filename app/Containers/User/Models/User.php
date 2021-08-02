@@ -8,7 +8,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends UserModel
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.

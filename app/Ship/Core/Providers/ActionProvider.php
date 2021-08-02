@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Ship\Core\Providers;
-
 
 use App\Ship\Core\Abstracts\Providers\MainProvider as AbstractMainProvider;
 use App\Ship\Core\Foundation\Action;

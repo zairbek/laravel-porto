@@ -16,5 +16,4 @@ class InternalErrorException extends Exception
     public $httpStatusCode = SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR;
 
     public $message = 'Something went wrong!';
-
 }

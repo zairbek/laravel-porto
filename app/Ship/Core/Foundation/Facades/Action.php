@@ -21,6 +21,4 @@ class Action extends Facade
     {
         return 'Action';
     }
-
 }
-

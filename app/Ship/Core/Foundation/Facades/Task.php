@@ -21,6 +21,4 @@ class Task extends Facade
     {
         return 'Task';
     }
-
 }
-

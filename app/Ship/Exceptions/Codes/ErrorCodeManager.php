@@ -83,9 +83,8 @@ class ErrorCodeManager
     public static function getErrorsForCodeTable($codeTable)
     {
         try {
-            $class = new $codeTable;
-        }
-        catch (Exception $exception) {
+            $class = new $codeTable();
+        } catch (Exception $exception) {
             throw new InternalErrorException();
         }
 
