@@ -175,6 +175,12 @@ return [
         App\Ship\Providers\EventServiceProvider::class,
         App\Ship\Providers\RouteServiceProvider::class,
 
+        /*
+         * Porto Providers
+         */
+        App\Ship\Core\Providers\ActionProvider::class,
+        App\Ship\Core\Providers\TaskProvider::class,
+
     ],
 
     /*
@@ -228,7 +234,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Action' => App\Ship\Core\Foundation\Facades\Action::class,
+        'Task' => App\Ship\Core\Foundation\Facades\Task::class,
     ],
 
 ];
