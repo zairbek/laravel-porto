@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Console;
+namespace App\Ship\Kernels;
 
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Foundation\Console\Kernel as LaravelKernel;
 
-class Kernel extends ConsoleKernel
+class ConsoleKernel extends LaravelKernel
 {
     /**
      * The Artisan commands provided by your application.
