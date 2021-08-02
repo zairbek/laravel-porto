@@ -47,3 +47,5 @@ RUN if [ ${INSTALL_COMPOSER} = true ]; then \
 WORKDIR /var/www
 
 CMD [ "php", "/var/www/artisan", "serve", "--host", "0.0.0.0"]
+
+EXPOSE 8000
