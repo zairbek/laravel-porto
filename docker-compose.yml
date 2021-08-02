@@ -1,7 +1,10 @@
 version: "3.7"
 
+volumes:
+  data:
+
 services:
-  auth:
+  php:
     build:
       context: .
       dockerfile: .docker/php/Dockerfile
@@ -9,3 +12,18 @@ services:
       - .:/var/www
     ports:
       - 8000:8000
+
+  postgres:
+    build: .docker/postgres
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+    volumes:
+    - data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
