@@ -24,7 +24,7 @@ abstract class Exception extends SymfonyHttpException
      *
      * @var int
      */
-    const DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
+    public const DEFAULT_STATUS_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
 
     /**
      * @var string

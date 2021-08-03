@@ -11,8 +11,6 @@ use Request;
 
 /**
  * Class Repository.
- *
- * @author  Mahmoud Zalt <mahmoud@zalt.me>
  */
 abstract class Repository extends PrettusRepository implements PrettusCacheable
 {
@@ -23,6 +21,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      * Set to 0 to "disable" this feature
      */
     protected $maxPaginationLimit = 0;
+
 
     /**
      * This function relies on strict conventions.
@@ -40,16 +39,16 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         // 2_ remove the namespace and keep the class name
         // 3_ remove the word Repository from the class name
         // 4_ check if the container name is set on the repository to indicate that the
-        //    model has different name than the container holding it
+        // model has different name than the container holding it
         // 5_ build the namespace of the Model based on the conventions
-
-        $fullName = get_called_class();
-        $className = substr($fullName, strrpos($fullName, '\\') + 1);
-        $classOnly = str_replace('Repository', '', $className);
+        $fullName       = get_called_class();
+        $className      = substr($fullName, (strrpos($fullName, '\\') + 1));
+        $classOnly      = str_replace('Repository', '', $className);
         $modelNamespace = 'App\Containers\\' . $this->getCurrentContainer() . '\\Models\\' . $classOnly;
 
         return $modelNamespace;
     }
+
 
     /**
      * Boot up the repository, pushing criteria.
@@ -62,6 +61,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         }
     }
 
+
     /**
      * Paginate the response
      *
@@ -69,20 +69,20 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      * The client can request all data (skipping pagination) by applying ?limit=0 to the request, if
      * PAGINATION_SKIP is set to true.
      *
-     * @param null   $limit
-     * @param array  $columns
+     * @param int|null $limit
+     * @param array $columns
      * @param string $method
      *
-     * @return  mixed
+     * @return mixed
      */
-    public function paginate($limit = null, $columns = ['*'], $method = "paginate")
+    public function paginate(?int $limit = null, array $columns = ['*'], string $method = 'paginate')
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
         $limit = $limit ?: Request::get('limit');
 
         // check, if skipping pagination is allowed and the requested by the user
-        if (Config::get('repository.pagination.skip') && $limit == "0") {
+        if (Config::get('repository.pagination.skip') && $limit == '0') {
             return parent::all($columns);
         }
 
@@ -98,58 +98,54 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         return parent::paginate($limit, $columns, $method);
     }
 
+
+    /**
+     * @return string
+     */
     private function getCurrentContainer(): string
     {
-        return substr(str_replace("App\\Containers\\", "", get_called_class()), 0, strpos(str_replace("App\\Containers\\", "", get_called_class()), '\\'));
+        return substr(
+            str_replace(
+                'App\\Containers\\',
+                '',
+                static::class
+            ),
+            0,
+            strpos(
+                str_replace(
+                    'App\\Containers\\',
+                    '',
+                    static::class
+                ),
+                '\\'
+            )
+        );
     }
 
+
+    /**
+     * @param  integer        $page
+     * @param  integer        $count
+     * @param  array|string[] $columns
+     * @return \Illuminate\Support\Collection
+     */
     public function lazyLoad(int $page = 1, int $count = 10, array $columns = ['*'])
     {
         $allCount = $this->model->count();
 
-        $data = $this->model
-            ->limit($count)
-            ->offset(($page - 1) * $count)
-            ->get($columns);
+        $data = $this->model->limit($count)->offset(($page - 1) * $count)->get($columns);
 
-        $collection = collect([
-            'results' => $data,
-            'navigation' => [
-                "pages" => (int) ceil($allCount / $count),
-                "thisPage" => $page,
-                "countObjects" => $allCount
+        $collection = collect(
+            [
+                'results'    => $data,
+                'navigation' => [
+                    'pages'        => (int) ceil($allCount / $count),
+                    'thisPage'     => $page,
+                    'countObjects' => $allCount,
+                ],
             ]
-        ]);
+        );
 
         return $collection;
-    }
-
-    public function getAll(array $columns = ['*'], $filter = [])
-    {
-
-        $obj = $this->model->newQuery();
-
-        if (!empty($filter)) {
-            //dd($filter);
-            foreach ($filter as $key => $value) {
-                if (is_array($value)) {
-                    $obj->where(function ($query) use ($value, $key) {
-                        foreach ($value as $v) {
-                            $query->where($key, '=', $v, "or");
-                        }
-                    });
-                } else {
-                    //dd($key,$value);
-                    $obj->where($key, '=', $value);
-                }
-            }
-            //dd($obj);
-        }
-
-        $data = $obj
-            ->where('name', '!=', '')
-            ->get($columns);
-
-        return $data;
     }
 }
