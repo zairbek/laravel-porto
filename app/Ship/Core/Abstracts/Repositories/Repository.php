@@ -22,7 +22,6 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      */
     protected $maxPaginationLimit = 0;
 
-
     /**
      * This function relies on strict conventions.
      * Conventions:
@@ -41,14 +40,11 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
         // 4_ check if the container name is set on the repository to indicate that the
         // model has different name than the container holding it
         // 5_ build the namespace of the Model based on the conventions
-        $fullName       = get_called_class();
+        $fullName       = static::class;
         $className      = substr($fullName, (strrpos($fullName, '\\') + 1));
         $classOnly      = str_replace('Repository', '', $className);
-        $modelNamespace = 'App\Containers\\' . $this->getCurrentContainer() . '\\Models\\' . $classOnly;
-
-        return $modelNamespace;
+        return 'App\Containers\\' . $this->getCurrentContainer() . '\\Models\\' . $classOnly;
     }
-
 
     /**
      * Boot up the repository, pushing criteria.
@@ -60,7 +56,6 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
             $this->pushCriteria(app(PrettusRequestCriteria::class));
         }
     }
-
 
     /**
      * Paginate the response
@@ -75,7 +70,7 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
      *
      * @return mixed
      */
-    public function paginate(?int $limit = null, array $columns = ['*'], string $method = 'paginate')
+    public function paginate($limit = null, $columns = ['*'], $method = 'paginate')
     {
         // the priority is for the function parameter, if not available then take
         // it from the request if available and if not keep it null.
@@ -121,7 +116,6 @@ abstract class Repository extends PrettusRepository implements PrettusCacheable
             )
         );
     }
-
 
     /**
      * @param  integer        $page

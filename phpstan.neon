@@ -3,3 +3,5 @@ parameters:
 	paths:
 		- src
 		- tests
+	bootstrapFiles:
+		- _ide_helper.php

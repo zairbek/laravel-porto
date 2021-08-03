@@ -32,6 +32,11 @@ abstract class Exception extends SymfonyHttpException
     protected $environment;
 
     /**
+     * @var null
+     */
+    private $customData = null;
+
+    /**
      * Exception constructor.
      * @param null $message
      * @param null $errors
@@ -76,9 +81,9 @@ abstract class Exception extends SymfonyHttpException
     }
 
     /**
-     * @param null $errors
+     * @param array|null $errors
      *
-     * @return  MessageBag|null
+     * @return  MessageBag
      */
     private function prepareError($errors = null)
     {
@@ -88,37 +93,37 @@ abstract class Exception extends SymfonyHttpException
     /**
      * @param array $errors
      *
-     * @return  array|MessageBag
+     * @return MessageBag
      */
     private function prepareArrayError(array $errors = [])
     {
-        return is_array($errors) ? new MessageBag($errors) : $errors;
+        return new MessageBag($errors);
     }
 
     /**
-     * @param $statusCode
+     * @param integer $statusCode
      *
-     * @return  int
+     * @return integer
      */
-    private function prepareStatusCode($statusCode = null)
+    private function prepareStatusCode($statusCode = null): int
     {
         return is_null($statusCode) ? $this->findStatusCode() : $statusCode;
     }
 
     /**
-     * @return  int
+     * @return  integer
      */
-    private function findStatusCode()
+    private function findStatusCode(): int
     {
         return property_exists($this, 'httpStatusCode') ? $this->httpStatusCode : self::DEFAULT_STATUS_CODE;
     }
 
     /**
-     * @param $statusCode
-     * @param $message
-     * @param $code
+     * @param integer $statusCode
+     * @param string $message
+     * @param integer $code
      */
-    private function logTheError($statusCode, $message, $code)
+    private function logTheError(int $statusCode, string $message, int $code): void
     {
         // if not testing environment, log the error message
         if ($this->environment != 'testing') {
@@ -156,10 +161,6 @@ abstract class Exception extends SymfonyHttpException
     private function evaluateErrorCode()
     {
         $code = $this->useErrorCode();
-
-        if (is_array($code)) {
-            $code = ErrorCodeManager::getCode($code);
-        }
 
         return $code;
     }

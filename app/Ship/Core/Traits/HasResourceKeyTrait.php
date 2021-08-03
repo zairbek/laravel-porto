@@ -10,8 +10,6 @@ use ReflectionClass;
  */
 trait HasResourceKeyTrait
 {
-
-
     /**
      * Returns the type for JSON API Serializer.
      * Can be overwritten with the protected $resourceKey in respective model class

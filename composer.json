@@ -11,8 +11,10 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
+        "league/fractal": "^0.19.2",
         "prettus/l5-repository": "^2.7",
-        "spatie/data-transfer-object": "^2.8"
+        "spatie/data-transfer-object": "^2.8",
+        "spatie/laravel-fractal": "^5.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

@@ -15,11 +15,11 @@ class Task
     /**
      * Get instance from a class string
      *
-     * @param $class
+     * @param string $class
      *
-     * @return  mixed
+     * @return  object
      */
-    private function resolveClass($class)
+    private function resolveClass(string $class): object
     {
         // in case passing apiato style names such as containerName@classType
         if ($this->needsParsing($class)) {
@@ -38,7 +38,7 @@ class Task
     }
 
     /**
-     * @param $containerName
+     * @param string $containerName
      *
      * @throws MissingContainerException
      */
@@ -52,8 +52,8 @@ class Task
     /**
      * Build namespace for a class in Container.
      *
-     * @param $containerName
-     * @param $className
+     * @param string $containerName
+     * @param string $className
      *
      * @return  string
      */
@@ -63,7 +63,7 @@ class Task
     }
 
     /**
-     * @param $className
+     * @param string $className
      *
      * @throws ClassDoesNotExistException
      */

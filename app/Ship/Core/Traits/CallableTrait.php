@@ -17,16 +17,17 @@ trait CallableTrait
      * This function will be called from anywhere (controllers, Actions,..) by the Apiato facade.
      * The $class input will usually be an Action or Task.
      *
-     * @param       $class
+     * @param string $class
      * @param array $runMethodArguments
      * @param array $extraMethodsToCall
      *
      * @return  mixed
-     * @throws \Dto\Exceptions\UnstorableValueException
      */
-    public function call($class, $runMethodArguments = [])
+    public function call(string $class, $runMethodArguments = [], $extraMethodsToCall = [])
     {
         $class = $this->resolveClass($class);
+
+        $this->callExtraMethods($class, $extraMethodsToCall);
 
         // detects Requests arguments "usually sent by controllers", and cvoert them to Transporters.
         $runMethodArguments = $this->convertRequestsToTransporters($class, $runMethodArguments);
@@ -37,25 +38,67 @@ trait CallableTrait
     /**
      * Split containerName@someClass into container name and class name
      *
-     * @param        $class
+     * @param string $class
      * @param string $delimiter
      *
      * @return  array
      */
-    private function parseClassName($class, $delimiter = '@')
+    private function parseClassName($class, $delimiter = '@'): array
     {
         return explode($delimiter, $class);
     }
 
     /**
+     * @param object $class
+     * @param array $extraMethodsToCall
+     */
+    private function callExtraMethods(object $class, array $extraMethodsToCall): void
+    {
+        // allows calling other methods in the class before calling the main `run` function.
+        foreach ($extraMethodsToCall as $methodInfo) {
+            // if is array means it method has arguments
+            if (is_array($methodInfo)) {
+                $this->callWithArguments($class, $methodInfo);
+            } else {
+                // if is string means it's just the method name without arguments
+                $this->callWithoutArguments($class, $methodInfo);
+            }
+        }
+    }
+
+    /**
+     * @param object $class
+     * @param array $methodInfo
+     */
+    private function callWithArguments(object $class, array $methodInfo): void
+    {
+        $method = key($methodInfo);
+        $arguments = $methodInfo[$method];
+        if (method_exists($class, $method)) {
+            $class->$method(...$arguments);
+        }
+    }
+
+    /**
+     * @param object $class
+     * @param string $methodInfo
+     */
+    private function callWithoutArguments(object $class, string $methodInfo): void
+    {
+        if (method_exists($class, $methodInfo)) {
+            $class->$methodInfo();
+        }
+    }
+
+    /**
      * If it's apiato Style caller like this: containerName@someClass
      *
-     * @param        $class
+     * @param string $class
      * @param string $separator
      *
      * @return  int
      */
-    private function needsParsing($class, $separator = '@')
+    private function needsParsing(string $class, string $separator = '@')
     {
         return preg_match('/' . $separator . '/', $class);
     }
@@ -65,13 +108,13 @@ trait CallableTrait
      * In case a user passed a Request object to an Action that accepts a Transporter, this function
      * converts that Request to Transporter object.
      *
-     * @param       $class
+     * @param object $class
      * @param array $runMethodArguments
      *
      * @return  array
-     * @throws \Dto\Exceptions\UnstorableValueException
+     * @throws \ReflectionException
      */
-    private function convertRequestsToTransporters($class, array $runMethodArguments = [])
+    private function convertRequestsToTransporters(object $class, array $runMethodArguments = [])
     {
         $requestPositions = [];
 
@@ -118,7 +161,7 @@ trait CallableTrait
 
             // so everything is ok
             // now we need to "switch" the REQUEST with the TRANSPORTER
-            /** @var Request $request */
+            /** @var \App\Ship\Core\Abstracts\Requests\Request $request */
             $request = $runMethodArguments[$requestPosition];
             $transporterClass = $request->getTransporter();
             /** @var Transporter $transporter */

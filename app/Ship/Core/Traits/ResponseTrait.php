@@ -25,17 +25,18 @@ trait ResponseTrait
     protected $metaData = [];
 
     /**
-     * @param       $data
-     * @param null  $transformerName The transformer (e.g., Transformer::class or new Transformer()) to be applied
+     * @param mixed $data
+     * @param string|Transformer $transformerName The transformer (e.g., Transformer::class or new Transformer())
+     * to be applied
      * @param array $includes additional resources to be included
      * @param array $meta additional meta information to be applied
-     * @param null  $resourceKey the resource key to be set for the TOP LEVEL resource
+     * @param null|AbstractPaginator|Collection|array $resourceKey the resource key to be set for the TOP LEVEL resource
      *
      * @return array
      */
     public function transform(
         $data,
-        $transformerName = null,
+        $transformerName,
         array $includes = [],
         array $meta = [],
         $resourceKey = null
@@ -61,7 +62,7 @@ trait ResponseTrait
         ];
 
         // no resource key was set
-        if (!$resourceKey) {
+        if (! $resourceKey) {
             // get the resource key from the model
             $obj = null;
             if ($data instanceof AbstractPaginator) {
@@ -155,6 +156,7 @@ trait ResponseTrait
      * @param $responseArray
      *
      * @return  \Illuminate\Http\JsonResponse
+     * @throws \ReflectionException
      */
     public function deleted($responseArray = null)
     {
